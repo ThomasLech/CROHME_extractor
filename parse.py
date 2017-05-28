@@ -249,6 +249,60 @@ def convert_to_imgs(traces_data, box_axis_size):
 
 	return patterns_enc, classes_rejected
 
+def parse_version(crohme_comp_ver, train_set_dirs, test_set_dirs, validation_set_dirs):
+
+	train_set_dirs = [os.path.join(crohme_package, crohme_comp_ver, train_set) for train_set in train_set_dirs]
+	test_set_dirs = [os.path.join(crohme_package, crohme_comp_ver, test_set) for test_set in test_set_dirs]
+	validation_set_dirs = [os.path.join(crohme_package, crohme_comp_ver, validation_set) for validation_set in validation_set_dirs]
+
+
+
+	'Parse TRAIN SET'
+	train_data = []
+	train_classes_rejected = []
+	for train_set_dir in train_set_dirs:
+
+		data_curr_dir, cl_rej_curr_dir = parse_inkmls(train_set_dir)
+		train_data += data_curr_dir
+		train_classes_rejected += cl_rej_curr_dir
+
+		for class_rejected in set(train_classes_rejected):
+			print(train_classes_rejected.count(class_rejected), 'rected entries of:\'', class_rejected, '\' class.')
+
+
+
+	'Parse TEST SET'
+	test_data = []
+	test_classes_rejected = []
+	for test_set_dir in test_set_dirs:
+
+		data_curr_dir, cl_rej_curr_dir = parse_inkmls(test_set_dir)
+		test_data += data_curr_dir
+		test_classes_rejected += cl_rej_curr_dir
+
+		for class_rejected in set(test_classes_rejected):
+			print(test_classes_rejected.count(class_rejected), 'rected entries of:\'', class_rejected, '\' class.')
+
+
+
+	'Parse VALIDATION SET'
+	validation_data = []
+	validation_classes_rejected = []
+	for validation_set_dir in validation_set_dirs:
+
+		data_curr_dir, cl_rej_curr_dir = parse_inkmls(validation_set_dir)
+		validation_data += data_curr_dir
+		validation_classes_rejected += cl_rej_curr_dir
+
+		for class_rejected in set(validation_classes_rejected):
+			print(validation_classes_rejected.count(class_rejected), 'rected entries of:\'', class_rejected, '\' class.')
+
+
+
+	return train_data, test_data, validation_data
+
+
+
 if __name__ == '__main__':
 
 	print(' Script flags:', '<box_axis_size>', '<dataset_ver=2012>')
@@ -256,7 +310,7 @@ if __name__ == '__main__':
 
 	'parse 1st arg'
 	if len(sys.argv) < 2:
-		print('\n + Usage:', sys.argv[0], '<box_axis_size>', '<dataset_ver=2012>')
+		print('\n + Usage:', sys.argv[0], '<box_axis_size>', '<dataset_ver=2013>')
 		exit()
 
 	try:
@@ -265,32 +319,15 @@ if __name__ == '__main__':
 		print(e)
 		exit()
 
-	dataset_ver = '2012'
+	dataset_ver = '2013'
 	if len(sys.argv) >= 3:
 
-		if sys.argv[2].isdigit():
-			dataset_ver = sys.argv[2]
-		else:
-			print('Version of the dataset has to be a number - CROHME comp. year(e.g. \'2013\').')
-			exit()
-
-	ver_found = False
-	for crohme_comp_ver in os.listdir(crohme_package):
-
-		crohme_comp_ver_abs = os.path.join(crohme_package, crohme_comp_ver)
-
-		if os.path.isdir(crohme_comp_ver_abs):
-
-			if crohme_comp_ver.endswith(dataset_ver + '_data'):
-
-				data_abs_path = crohme_comp_ver_abs
-				ver_found = True
-
-	if ver_found is False:
-		print(' # Specified CROHME dataset version was NOT FOUND.')
-		exit()
-
-	print(' ! Warning:', 'Loading data from', data_abs_path)
+		dataset_ver = sys.argv[2]
+		# if sys.argv[2].isdigit():
+		# 	dataset_ver = sys.argv[2]
+		# else:
+		# 	print('Version of the dataset has to be a number - CROHME comp. year(e.g. \'2013\').')
+		# 	exit()
 
 
 
@@ -307,64 +344,72 @@ if __name__ == '__main__':
 	vary depending of the package\'s version picked **** '
 	if dataset_ver == '2012':
 
-		train_data = os.path.join(data_abs_path, 'trainData')
-		test_set_dir = os.path.join(data_abs_path, 'testDataGT')
-		validation_set_dir = os.path.join(data_abs_path, 'testData')
-
-		train_patterns_enc, classes_rejected = parse_inkmls(train_data)
-
-		for class_rejected in set(classes_rejected):
-			print(classes_rejected.count(class_rejected), 'rected entries of:\'', class_rejected, '\' class.')
-
-
+		train_data, test_data, validation_data = \
+			parse_version(crohme_comp_ver='CROHME2012_data',
+						train_set_dirs=['trainData'], 
+						test_set_dirs=['testDataGT'], 
+						validation_set_dirs=['testData'])
 
 
 	elif dataset_ver == '2013':
 
-		train_data = os.path.join(data_abs_path, 'TrainINKML')
-		test_set_dir = os.path.join(data_abs_path, 'TestINKMLGT')
-		validation_set_dir = os.path.join(data_abs_path, 'TestINKML')
+		train_data, test_data, validation_data = \
+			parse_version(crohme_comp_ver='CROHME2013_data', train_set_dirs=[\
+				'TrainINKML\\expressmatch', 'TrainINKML\\extension', 'TrainINKML\\HAMEX', 'TrainINKML\\KAIST', 'TrainINKML\\MathBrush', 'TrainINKML\\MfrDB'\
+			], 
+						test_set_dirs=['TestINKMLGT'], 
+						validation_set_dirs=['TestINKML'])
 
+	elif dataset_ver == '2011+2012+2013':
 
-		'Parse TRAIN SET'
-		train_patterns_enc = []
-		classes_rejected = []
-		for mini_train_set in os.listdir(train_data):
-			mini_train_set_abs_path = os.path.join(train_data, mini_train_set)
+		train_data, test_data, validation_data = \
+			parse_version(crohme_comp_ver='', 
+				train_set_dirs=[\
+					'CROHME2011_data\\CROHME_training',
+					'CROHME2012_data\\trainData',
+					'CROHME2013_data\\TrainINKML\\expressmatch', 
+					'CROHME2013_data\\TrainINKML\\extension', 
+					'CROHME2013_data\\TrainINKML\\HAMEX', 
+					'CROHME2013_data\\TrainINKML\\KAIST', 
+					'CROHME2013_data\\TrainINKML\\MathBrush', 
+					'CROHME2013_data\\TrainINKML\\MfrDB'\
+								], 
+				test_set_dirs=[\
+					'CROHME2011_data\\CROHME_testGT',
+					'CROHME2012_data\\testDataGT',
+					'CROHME2013_data\\TestINKMLGT'\
+					], 
+				validation_set_dirs=[\
+					'CROHME2011_data\\CROHME_test',
+					'CROHME2012_data\\testData',
+					'CROHME2013_data\\TestINKML'\
+					])
 
-			ptrns_enc_curr_set, classes_rej_curr_set = parse_inkmls(mini_train_set_abs_path)
-			train_patterns_enc += ptrns_enc_curr_set
-			classes_rejected += classes_rej_curr_set
+	else:
+		'dataset ver. NOT FOUND'
+		print('Dataset version NOT FOUND!\n')
+		exit()
 
-		for class_rejected in set(classes_rejected):
-			print(classes_rejected.count(class_rejected), 'rected entries of:\'', class_rejected, '\' class.')
-
-	# for pattern in train_patterns_enc:
+	# for pattern in train_data:
 	# 	print('label:', pattern['label'])
 	# 	plt.imshow(pattern['pattern'], cmap='gray')
 	# 	plt.show()
 
 
-	test_patterns_enc, test_classes_rej = parse_inkmls(test_set_dir)
-	[print(test_classes_rej.count(class_rejected), 'rected entries of:\'', class_rejected, '\' class.') for class_rejected in set(test_classes_rej)]
-
-
-	valid_patterns_enc, valid_classes_rej = parse_inkmls(validation_set_dir)
-	print(len(valid_classes_rej), 'validation set entries were REJECTED.')
-
 
 
 
 	'PRINT LABELS extracted'
-	labels_extracted = set([pattern['label'] for pattern in (train_patterns_enc + test_patterns_enc)])
+	labels_extracted = set([pattern['label'] for pattern in (train_data + test_data)])
 	print(len(labels_extracted), 'LABELS were extracted:\n')
 	[print(' ', label_extr) for label_extr in labels_extracted]
 
 
 
-	print('\nTRAING SET SIZE:', len(train_patterns_enc))
-	print('TEST SET SIZE:', len(test_patterns_enc))
-	print('VALIDATION SET SIZE:', len(valid_patterns_enc))
+
+	print('\nTRAING SET SIZE:', len(train_data))
+	print('TEST SET SIZE:', len(test_data))
+	print('VALIDATION SET SIZE:', len(validation_data))
 
 	' DUMP DATA '
 	print('\nDumping extracted data ...')
@@ -378,13 +423,13 @@ if __name__ == '__main__':
 
 
 	with open(os.path.join(train_dir, 'train.pickle'), 'wb') as train:
-		pickle.dump(train_patterns_enc, train, protocol=pickle.HIGHEST_PROTOCOL)
+		pickle.dump(train_data, train, protocol=pickle.HIGHEST_PROTOCOL)
 		print('Data has been successfully dumped into', train.name)
 
 	with open(os.path.join(test_dir, 'test.pickle'), 'wb') as test:
-		pickle.dump(test_patterns_enc, test, protocol=pickle.HIGHEST_PROTOCOL)
+		pickle.dump(test_data, test, protocol=pickle.HIGHEST_PROTOCOL)
 		print('Data has been successfully dumped into', test.name)
 
 	with open(os.path.join(validation_dir, 'validation.pickle'), 'wb') as validation:
-		pickle.dump(valid_patterns_enc, validation, protocol=pickle.HIGHEST_PROTOCOL)
+		pickle.dump(validation_data, validation, protocol=pickle.HIGHEST_PROTOCOL)
 		print('Data has been successfully dumped into', validation.name)
