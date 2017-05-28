@@ -1,5 +1,5 @@
 ## Abstract
-CROHME datasets originally exhibit features needed for Online-handwritting recognition.  
+CROHME datasets originally exhibit features needed for _Online-handwritting_ recognition.  
 Apart from traces drawn encoded, inkml files also contain trace drawing time captured.
 So we leave only those features that are needed for our task.
 
