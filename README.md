@@ -31,7 +31,9 @@ Example of script execution: `python extract_phog.py 5 10 20` <-- loads HoGs wit
 ## Installation
 Python version we use is **3.5.0**.
 
-1. Install specified dependencies with pip (Python Package Manager) using the following shell command:
+1. Extract *_CROHME_full_v2.zip_* contents before running any of the above scripts.
+
+2. Install specified dependencies with pip (Python Package Manager) using the following shell command:
 ```
 pip install -U -r requirements.txt
 ```
