@@ -40,6 +40,6 @@ pip install -U -r requirements.txt
 
 
 
-## Labels distribution
+## Distribution of labels
 ![labels_histogram](https://cloud.githubusercontent.com/assets/22115481/26559054/6e731ee8-44ad-11e7-922b-20bd79210f2a.png)
 Labels were combined from train and test sets.
