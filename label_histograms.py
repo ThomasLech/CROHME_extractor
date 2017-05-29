@@ -44,14 +44,14 @@ if __name__ == '__main__':
 	label_indices = [label_idx for label_idx in range(len(labels_set))]
 
 	plt.figure(figsize=(40, 3))  # width:20, height:3
-	plt.bar(label_indices, occurancies, align='edge', width=0.7)
-	plt.xticks(label_indices, labels_set, size='small')
+	plt.bar(label_indices, occurancies, align='center', width=0.8)
+	plt.xticks(label_indices, labels_set, size='small', rotation=65)
 
 	plt.xlabel('class')
 	plt.ylabel('numb of occurancies')
 	plt.title('Distribution of classes across train, test sets')
 	plt.legend()
-	plt.show()
+	# plt.show()
 
 	'Dump plot into image file'
-	# plt.savefig('label_histograms.png')
+	plt.savefig('label_histograms.png')
