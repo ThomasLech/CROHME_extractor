@@ -41,5 +41,5 @@ pip install -U -r requirements.txt
 
 
 ## Distribution of labels
-![labels_histogram](https://cloud.githubusercontent.com/assets/22115481/26559054/6e731ee8-44ad-11e7-922b-20bd79210f2a.png)
-Labels were combined from train and test sets.
+![all_labels_distribution](https://cloud.githubusercontent.com/assets/22115481/26694312/413fb646-4707-11e7-943c-b8ecebd0c986.png)
+Labels were combined from **_train_** and **_test_** sets.
