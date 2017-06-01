@@ -27,7 +27,7 @@ So this script takes arbitrary number of **hog_cell_size** values(HoG features h
 Example of script execution: `python extract_phog.py 5 10 20` <-- loads HoGs with respectively 5x5, 10x10, 20x20 cell sizes.
 
 
-4. **_histograms_** folder contains histogram representing **distribution of labels** considering different label categories. These diagrams help you better understand underlying data.
+4. **_histograms_** folder contains histograms representing **distribution of labels** based on different label categories. These diagrams help you better understand underlying dataset.
 
 
 ## Installation
