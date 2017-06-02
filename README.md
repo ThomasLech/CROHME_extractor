@@ -17,7 +17,7 @@ This script combines samples extracted from all training sets and all test sets 
 This script accepts 1 command line argument, namely **hog_cell_size**.  
 **hog_cell_size** corresponds to **pixels_per_cell** parameter of **skimage.feature.hog** function.  
 We use **skimage.feature.hog** to extract HoG features.  
-Example of script execution: `python extract_hog.py 16`  <-- pixels_per_cell=(5, 5)  
+Example of script execution: `python extract_hog.py 5`  <-- pixels_per_cell=(5, 5)
 This script loads data previously dumped by **_parse.py_** and again dumps its outputs(train, test) separately.
 
 
