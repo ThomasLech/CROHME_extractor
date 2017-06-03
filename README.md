@@ -5,6 +5,20 @@ So we leave only those features that are needed for our task.
 
 Following scripts will get you started in _Offline math symbols recognition_ task.
 
+
+
+## Installation
+Python version we use is **3.5.0**.
+
+1. Extract **_CROHME_full_v2.zip_**(found inside **_data_** directory) contents before running any of the above scripts.
+
+2. Install specified dependencies with pip (Python Package Manager) using the following shell command:
+```
+pip install -U -r requirements.txt
+```
+
+
+
 ## Scripts info
 1. **_parse.py_** script will extract **square-shaped** bitmaps.  
 You can specify bitmap size with `bitmap_size` command line flag(argument).  
@@ -28,17 +42,6 @@ Example of script execution: `python extract_phog.py 5 10 20` <-- loads HoGs wit
 
 
 4. **_histograms_** folder contains histograms representing **distribution of labels** based on different label categories. These diagrams help you better understand underlying dataset.
-
-
-## Installation
-Python version we use is **3.5.0**.
-
-1. Extract **_CROHME_full_v2.zip_**(found inside **_data_** directory) contents before running any of the above scripts.
-
-2. Install specified dependencies with pip (Python Package Manager) using the following shell command:
-```
-pip install -U -r requirements.txt
-```
 
 
 
