@@ -30,7 +30,7 @@ def get_traces_data(inkml_file_abs_path):
 	doc_namespace = "{http://www.w3.org/2003/InkML}"
 
 	'Stores traces_all with their corresponding id'
-	traces_all = [{'id': trace_tag.get('id'), 
+	traces_all = [{'id': trace_tag.get('id'),
 						'coords': [[round(float(axis_coord)) if float(axis_coord).is_integer() else round(float(axis_coord) * 10000) \
 										for axis_coord in coord[1:].split(' ')] if coord.startswith(' ') \
 									else [round(float(axis_coord)) if float(axis_coord).is_integer() else round(float(axis_coord) * 10000) \
@@ -49,7 +49,7 @@ def get_traces_data(inkml_file_abs_path):
 		for traceGroup in traceGroupWrapper.findall(doc_namespace + 'traceGroup'):
 
 			label = traceGroup.find(doc_namespace + 'annotation').text
-			
+
 			'traces of the current traceGroup'
 			traces_curr = []
 			for traceView in traceGroup.findall(doc_namespace + 'traceView'):
@@ -188,7 +188,7 @@ def draw_pattern(trace_group, box_axis_size):
 			for pt_idx in range(len(trace) - 1):
 
 				'Indices of pixels that belong to the line. May be used to directly index into an array'
-				pattern_drawn[line(r0=trace[pt_idx][1], c0=trace[pt_idx][0], 
+				pattern_drawn[line(r0=trace[pt_idx][1], c0=trace[pt_idx][0],
 								   r1=trace[pt_idx + 1][1], c1=trace[pt_idx + 1][0])] = 0.0
 
 
@@ -305,12 +305,12 @@ def parse_version(crohme_comp_ver, train_set_dirs, test_set_dirs, validation_set
 
 if __name__ == '__main__':
 
-	print(' Script flags:', '<box_axis_size>', '<dataset_ver=2012>')
+	print(' + Script flags:', '<box_axis_size>', '<dataset_ver=2013>\n')
 
 
 	'parse 1st arg'
 	if len(sys.argv) < 2:
-		print('\n + Usage:', sys.argv[0], '<box_axis_size>', '<dataset_ver=2013>')
+		print('\n ! Usage:', sys.argv[0], '<box_axis_size>', '<dataset_ver=2013>')
 		exit()
 
 	try:
@@ -342,12 +342,20 @@ if __name__ == '__main__':
 
 	' **** Names of directories containing TRAIN, TEST \
 	vary depending of the package\'s version picked **** '
-	if dataset_ver == '2012':
+	if dataset_ver == '2011':
+
+		train_data, test_data, validation_data = \
+			parse_version(crohme_comp_ver='CROHME2011_data',
+						train_set_dirs=['CROHME_training'],
+						test_set_dirs=['CROHME_testGT'],
+						validation_set_dirs=['CROHME_test'])
+
+	elif dataset_ver == '2012':
 
 		train_data, test_data, validation_data = \
 			parse_version(crohme_comp_ver='CROHME2012_data',
-						train_set_dirs=['trainData'], 
-						test_set_dirs=['testDataGT'], 
+						train_set_dirs=['trainData'],
+						test_set_dirs=['testDataGT'],
 						validation_set_dirs=['testData'])
 
 
@@ -356,29 +364,29 @@ if __name__ == '__main__':
 		train_data, test_data, validation_data = \
 			parse_version(crohme_comp_ver='CROHME2013_data', train_set_dirs=[\
 				'TrainINKML\\expressmatch', 'TrainINKML\\extension', 'TrainINKML\\HAMEX', 'TrainINKML\\KAIST', 'TrainINKML\\MathBrush', 'TrainINKML\\MfrDB'\
-			], 
-						test_set_dirs=['TestINKMLGT'], 
+			],
+						test_set_dirs=['TestINKMLGT'],
 						validation_set_dirs=['TestINKML'])
 
 	elif dataset_ver == '2011+2012+2013':
 
 		train_data, test_data, validation_data = \
-			parse_version(crohme_comp_ver='', 
+			parse_version(crohme_comp_ver='',
 				train_set_dirs=[\
 					'CROHME2011_data\\CROHME_training',
 					'CROHME2012_data\\trainData',
-					'CROHME2013_data\\TrainINKML\\expressmatch', 
-					'CROHME2013_data\\TrainINKML\\extension', 
-					'CROHME2013_data\\TrainINKML\\HAMEX', 
-					'CROHME2013_data\\TrainINKML\\KAIST', 
-					'CROHME2013_data\\TrainINKML\\MathBrush', 
+					'CROHME2013_data\\TrainINKML\\expressmatch',
+					'CROHME2013_data\\TrainINKML\\extension',
+					'CROHME2013_data\\TrainINKML\\HAMEX',
+					'CROHME2013_data\\TrainINKML\\KAIST',
+					'CROHME2013_data\\TrainINKML\\MathBrush',
 					'CROHME2013_data\\TrainINKML\\MfrDB'\
-								], 
+								],
 				test_set_dirs=[\
 					'CROHME2011_data\\CROHME_testGT',
 					'CROHME2012_data\\testDataGT',
 					'CROHME2013_data\\TestINKMLGT'\
-					], 
+					],
 				validation_set_dirs=[\
 					'CROHME2011_data\\CROHME_test',
 					'CROHME2012_data\\testData',

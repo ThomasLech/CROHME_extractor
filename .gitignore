@@ -1,4 +1,7 @@
 __pycache__/
+data/CROHME_full_v2/
+outputs/
+
 
 # Windows image file caches
 Thumbs.db
