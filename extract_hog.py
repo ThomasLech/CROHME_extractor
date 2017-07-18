@@ -4,7 +4,6 @@ import os
 import pickle
 
 from skimage.feature import hog
-import matplotlib.pyplot as plt
 
 
 'constants'
@@ -35,13 +34,16 @@ if __name__ == '__main__':
 
 	'Load pickled data'
 	with open(os.path.join(train_dir, 'train.pickle'), 'rb') as train:
-		train_set = pickle.load(train)
+        print('Restoring training set ...')
+        train_set = pickle.load(train)
 
-	with open(os.path.join(test_dir, 'test.pickle'), 'rb') as test:
-		test_set = pickle.load(test)
+    with open(os.path.join(test_dir, 'test.pickle'), 'rb') as test:
+        print('Restoring test set ...')
+        test_set = pickle.load(test)
 
-	with open(os.path.join(validation_dir, 'validation.pickle'), 'rb') as validation:
-		validation_set = pickle.load(validation)
+    with open(os.path.join(validation_dir, 'validation.pickle'), 'rb') as validation:
+        print('Restoring validation set ...')
+        validation_set = pickle.load(validation)
 
 
 
