@@ -75,7 +75,7 @@ if __name__ == '__main__':
                 random_id = random.randint(0, len(train_set))
 
                 axis_arr[row, col].imshow(train_set[random_id]['pattern'], cmap='gray')
-                axis_arr[row, col].set_title('Class: \"' + train_set[random_id]['label'] + '\"', size=10)
+                axis_arr[row, col].set_title('Class: \"' + train_set[random_id]['label'] + '\"', size=13, y=1.2)
 
             'Remove explicit axises'
             axis_arr[row, col].axis('off')
@@ -83,7 +83,7 @@ if __name__ == '__main__':
             sample_id += 1
 
     'Adjust spacing between subplots and window border'
-    figure.subplots_adjust(hspace=0.4, wspace=0.2, left=0.01, right=0.99, bottom=0.05)
+    figure.subplots_adjust(hspace=1.4, wspace=0.2)
 
     # Brings foreground
     plt.show()
