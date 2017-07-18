@@ -7,7 +7,7 @@ Following scripts will get you started in _Offline math symbols recognition_ tas
 
 
 
-## Installation
+## Setup
 Python version we use is **3.5.0**.
 
 1. Extract **_CROHME_full_v2.zip_**(found inside **_data_** directory) contents before running any of the above scripts.
