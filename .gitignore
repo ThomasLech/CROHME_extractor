@@ -1,6 +1,7 @@
 __pycache__/
 data/CROHME_full_v2/
 outputs/
+HOG/
 
 
 # Windows image file caches

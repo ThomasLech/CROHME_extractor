@@ -208,12 +208,8 @@ def convert_to_imgs(traces_data, box_axis_size):
 		'traceGroup dimensions'
 		trace_grp_height, trace_grp_width = max_y - min_y, max_x - min_x
 
-
-
 		'shift pattern to its relative position'
 		shifted_trace_grp = shift_trace_grp(trace_group, min_x=min_x, min_y=min_y)
-
-
 
 		'Interpolates a pattern so that it fits into a box with specified size'
 		'method: LINEAR INTERPOLATION'
@@ -227,11 +223,8 @@ def convert_to_imgs(traces_data, box_axis_size):
 
 			continue
 
-
-
 		'Get min, max coords once again in order to center scaled patter inside the box'
 		min_x, min_y, max_x, max_y = get_min_coords(interpolated_trace_grp)
-
 
 		centered_trace_grp = center_pattern(interpolated_trace_grp, max_x=max_x, max_y=max_y, box_axis_size=box_axis_size)
 
@@ -242,10 +235,7 @@ def convert_to_imgs(traces_data, box_axis_size):
 
 		pattern_enc = dict({'pattern': pattern_drawn, 'label': pattern.get('label')})
 
-
 		patterns_enc.append(pattern_enc)
-
-
 
 	return patterns_enc, classes_rejected
 
@@ -409,9 +399,12 @@ if __name__ == '__main__':
 
 	'PRINT LABELS extracted'
 	labels_extracted = set([pattern['label'] for pattern in (train_data + test_data)])
+	labels_extracted = sorted(labels_extracted, key=lambda label: label)
 	print(len(labels_extracted), 'LABELS were extracted:\n')
 	[print(' ', label_extr) for label_extr in labels_extracted]
+	with open('categories.txt', 'w') as desc:
 
+		[desc.write(' ' + label_extr) for label_extr in labels_extracted]
 
 
 

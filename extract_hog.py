@@ -4,7 +4,7 @@ import os
 import pickle
 
 from skimage.feature import hog
-
+import matplotlib.pyplot as plt
 
 'constants'
 outputs_rel_path = 'outputs'
@@ -17,11 +17,11 @@ validation_dir = os.path.join(outputs_rel_path, 'validation')
 if __name__ == '__main__':
 
 	'parse cmd input'
-	print(' # Script flags:', '<hog_cell_size>')
+	print(' # Script flags:', '<hog_cell_size>', '\n')
 
 	'parse 1st arg'
 	if len(sys.argv) < 2:
-		print('\n + Usage:', sys.argv[0], '<hog_cell_size>')
+		print('\n + Usage:', sys.argv[0], '<hog_cell_size>', '\n')
 		exit()
 
 	try:
@@ -34,16 +34,16 @@ if __name__ == '__main__':
 
 	'Load pickled data'
 	with open(os.path.join(train_dir, 'train.pickle'), 'rb') as train:
-        print('Restoring training set ...')
-        train_set = pickle.load(train)
+		print('Restoring training set ...')
+		train_set = pickle.load(train)
 
-    with open(os.path.join(test_dir, 'test.pickle'), 'rb') as test:
-        print('Restoring test set ...')
-        test_set = pickle.load(test)
+	with open(os.path.join(test_dir, 'test.pickle'), 'rb') as test:
+		print('Restoring test set ...')
+		test_set = pickle.load(test)
 
-    with open(os.path.join(validation_dir, 'validation.pickle'), 'rb') as validation:
-        print('Restoring validation set ...')
-        validation_set = pickle.load(validation)
+	with open(os.path.join(validation_dir, 'validation.pickle'), 'rb') as validation:
+		print('Restoring validation set ...')
+		validation_set = pickle.load(validation)
 
 
 
@@ -59,11 +59,29 @@ if __name__ == '__main__':
 	' TRAIN SET '
 	print('Extracting hog - TRAIN set ...')
 	train_hog = []
-	for pattern_enc in train_set:
+	for pattern_enc in train_set[40:]:
 
 		hog_enc = dict({'label': pattern_enc.get('label'), 'hog': hog(pattern_enc.get('pattern'), \
 						orientations=orientations, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block, visualise=False, \
 						block_norm='L2-Hys')})
+		#
+		# _, vis = hog(pattern_enc.get('pattern'), \
+		# 				orientations=16, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block, visualise=True, \
+		# 				block_norm='L2-Hys')
+		#
+		# figure, axis_arr = plt.subplots(1, 2, figsize=(12, 4))
+		# figure.patch.set_facecolor((0.91, 0.91, 0.91))
+		#
+		# axis_arr[1].imshow(pattern_enc.get('pattern'), cmap='gray')
+		# axis_arr[0].imshow(vis, cmap='gray')
+		#
+		# axis_arr[0].axis('off')
+		# axis_arr[1].axis('off')
+		#
+		# plt.show()
+		# plt.imsave('orig_1.png', pattern_enc.get('pattern'), cmap='gray')
+		# plt.imsave('hog_1.png', vis, cmap='gray')
+
 		train_hog.append(hog_enc)
 
 

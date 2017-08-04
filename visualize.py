@@ -21,11 +21,11 @@ validation_dir = os.path.join(outputs_rel_path, 'validation')
 if __name__ == '__main__':
 
     'parse cmd input'
-    print(' # Script flags:', '<number_of_samples>', '<number_of_columns=4>')
+    print(' # Script flags:', '<number_of_samples>', '<number_of_columns=4>', '\n')
 
     'parse number_of_samples argument'
     if len(sys.argv) < 2:
-        print('\n ! Usage:', sys.argv[0], '<number_of_samples>', '<number_of_columns=4>')
+        print('\n ! Usage:', sys.argv[0], '<number_of_samples>', '<number_of_columns=4>', '\n')
         exit()
 
     try:
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     'Instanciate a figure to plot samples on'
     figure, axis_arr = plt.subplots(rows_numb, cols_numb, figsize=(12, 4))
-    plt.axis('off')
+    figure.patch.set_facecolor((0.91, 0.91, 0.91))
 
     sample_id = 0
     for row in range(rows_numb):

@@ -1,0 +1,6 @@
+all: ! ( ) + , - . / 0 1 2 3 4 5 6 7 8 9 = A B C E F G H I L M N P R S T V X Y [ \Delta \alpha \beta \cos \div \exists \forall \gamma \geq \gt \in \infty \int \lambda \ldots \leq \lim \log \lt \mu \neq \phi \pi \pm \prime \rightarrow \sigma \sin \sqrt \sum \tan \theta \times \{ \} ] a b c d e f g h i j k l m n o p q r s t u v w x y z |
+digits: 0 1 2 3 4 5 6 7 8 9
+operators: ( ) [ ] + - / = \geq \gt \leq \lt \neq \times \div
+lowercase_letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+uppercase_letters: A B C E F G H I L M N P R S T V X Y
+greek: \Delta \alpha \beta \gamma \lambda \mu \phi \pi \sigma \theta
