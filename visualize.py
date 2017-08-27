@@ -16,8 +16,6 @@ train_dir = os.path.join(outputs_rel_path, 'train')
 test_dir = os.path.join(outputs_rel_path, 'test')
 validation_dir = os.path.join(outputs_rel_path, 'validation')
 
-
-
 if __name__ == '__main__':
 
     'parse cmd input'
@@ -74,7 +72,7 @@ if __name__ == '__main__':
                 'Generate random sample id'
                 random_id = random.randint(0, len(train_set))
 
-                axis_arr[row, col].imshow(train_set[random_id]['pattern'], cmap='gray')
+                axis_arr[row, col].imshow(train_set[random_id]['features'], cmap='gray')
                 axis_arr[row, col].set_title('Class: \"' + train_set[random_id]['label'] + '\"', size=13, y=1.2)
 
             'Remove explicit axises'

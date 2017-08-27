@@ -20,6 +20,7 @@ class Extractor(object):
     """Extracts patterns from inkml files."""
 
     crohme_package = os.path.join('data', 'CROHME_full_v2')
+    output_dir = 'outputs'
 
     versions_available = ['2011', '2012', '2013']
 
@@ -40,10 +41,8 @@ class Extractor(object):
     def __init__(self, box_size, versions="2013", categories="all"):
 
         try:
-
             self.box_size = int(box_size)
         except ValueError:
-
             print("\n! Box size must be a number!\n")
             exit()
 
@@ -216,7 +215,7 @@ class Extractor(object):
             # plt.imshow(pattern_drawn, cmap='gray')
             # plt.show()
 
-            pattern_enc = dict({'pattern': pattern_drawn, 'label': pattern.get('label')})
+            pattern_enc = dict({'features': pattern_drawn, 'label': pattern.get('label')})
 
             # Filter classes that belong to categories selected by the user
             if pattern_enc.get('label') in self.classes:
@@ -318,12 +317,9 @@ class Extractor(object):
     	'' 'KEEP original size ratio' ''
     	trace_grp_ratio = (trace_grp_width) / (trace_grp_height)
 
-    	box_ratio = box_size / box_size
-
-
     	scale_factor = 1.0
     	'' 'Set \"rescale coefficient\" magnitude' ''
-    	if trace_grp_ratio < box_ratio:
+    	if trace_grp_ratio < 1.0:
 
     		scale_factor = (box_size / trace_grp_height)
     	else:
@@ -399,12 +395,10 @@ if __name__ == '__main__':
             extractor = Extractor(sys.argv[2], sys.argv[3], sys.argv[4])
 
 
-
     # Extract pixel features
     if out_format == out_formats[0]:
 
         train_data, test_data, validation_data = extractor.pixels()
-        print(len(train_data))
 
     # Extract HOG features
     elif out_format == out_formats[1]:
@@ -415,3 +409,34 @@ if __name__ == '__main__':
     elif out_format == out_formats[2]:
 
         train_data, test_data, validation_data = extractor.phog()
+
+    output_dir = os.path.abspath(extractor.output_dir)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+
+    train_out_dir = os.path.join(output_dir, 'train')
+    test_out_dir = os.path.join(output_dir, 'test')
+    validation_out_dir = os.path.join(output_dir, 'validation')
+
+    # Save data
+    print('\nDumping extracted data ...')
+    # Make directories if needed
+    if not os.path.exists(train_out_dir):
+        os.mkdir(train_out_dir)
+    if not os.path.exists(test_out_dir):
+        os.mkdir(test_out_dir)
+    if not os.path.exists(validation_out_dir):
+        os.mkdir(validation_out_dir)
+
+
+    with open(os.path.join(train_out_dir, 'train.pickle'), 'wb') as train:
+        pickle.dump(train_data, train, protocol=pickle.HIGHEST_PROTOCOL)
+        print('Data has been successfully dumped into', train.name)
+
+    with open(os.path.join(test_out_dir, 'test.pickle'), 'wb') as test:
+        pickle.dump(test_data, test, protocol=pickle.HIGHEST_PROTOCOL)
+        print('Data has been successfully dumped into', test.name)
+
+    with open(os.path.join(validation_out_dir, 'validation.pickle'), 'wb') as validation:
+        pickle.dump(validation_data, validation, protocol=pickle.HIGHEST_PROTOCOL)
+        print('Data has been successfully dumped into', validation.name)

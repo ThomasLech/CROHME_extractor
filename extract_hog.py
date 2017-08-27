@@ -61,27 +61,9 @@ if __name__ == '__main__':
 	train_hog = []
 	for pattern_enc in train_set[40:]:
 
-		hog_enc = dict({'label': pattern_enc.get('label'), 'hog': hog(pattern_enc.get('pattern'), \
+		hog_enc = dict({'label': pattern_enc.get('label'), 'features': hog(pattern_enc.get('features'), \
 						orientations=orientations, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block, visualise=False, \
 						block_norm='L2-Hys')})
-		#
-		# _, vis = hog(pattern_enc.get('pattern'), \
-		# 				orientations=16, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block, visualise=True, \
-		# 				block_norm='L2-Hys')
-		#
-		# figure, axis_arr = plt.subplots(1, 2, figsize=(12, 4))
-		# figure.patch.set_facecolor((0.91, 0.91, 0.91))
-		#
-		# axis_arr[1].imshow(pattern_enc.get('pattern'), cmap='gray')
-		# axis_arr[0].imshow(vis, cmap='gray')
-		#
-		# axis_arr[0].axis('off')
-		# axis_arr[1].axis('off')
-		#
-		# plt.show()
-		# plt.imsave('orig_1.png', pattern_enc.get('pattern'), cmap='gray')
-		# plt.imsave('hog_1.png', vis, cmap='gray')
-
 		train_hog.append(hog_enc)
 
 
@@ -90,7 +72,7 @@ if __name__ == '__main__':
 	test_hog = []
 	for pattern_enc in test_set:
 
-		hog_enc = dict({'label': pattern_enc.get('label'), 'hog': hog(pattern_enc.get('pattern'), \
+		hog_enc = dict({'label': pattern_enc.get('label'), 'features': hog(pattern_enc.get('features'), \
 						orientations=orientations, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block, visualise=False, \
 						block_norm='L2-Hys')})
 		test_hog.append(hog_enc)
@@ -101,7 +83,7 @@ if __name__ == '__main__':
 	validation_hog = []
 	for pattern_enc in validation_set:
 
-		hog_enc = dict({'label': pattern_enc.get('label'), 'hog': hog(pattern_enc.get('pattern'), \
+		hog_enc = dict({'label': pattern_enc.get('label'), 'features': hog(pattern_enc.get('features'), \
 						orientations=orientations, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block, visualise=False, \
 						block_norm='L2-Hys')})
 		validation_hog.append(hog_enc)

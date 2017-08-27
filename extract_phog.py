@@ -45,10 +45,10 @@ if __name__ == '__main__':
 		PHOG_features = []
 		for train_dif_hog in train_dif_hogs:
 
-			PHOG_features += train_dif_hog[hog_enc_idx]['hog'].tolist()
+			PHOG_features += train_dif_hog[hog_enc_idx]['features'].tolist()
 
 
-		PHOG_enc = dict({'label': train_dif_hogs[0][hog_enc_idx]['label'], 'phog': PHOG_features})
+		PHOG_enc = dict({'label': train_dif_hogs[0][hog_enc_idx]['label'], 'features': np.asarray(PHOG_features)})
 		train_phog.append(PHOG_enc)
 
 	# ' **** MERGE all different hog representations of EACH PATTERN **** '
@@ -76,10 +76,10 @@ if __name__ == '__main__':
 		PHOG_features = []
 		for test_dif_hog in test_dif_hogs:
 
-			PHOG_features += test_dif_hog[hog_enc_idx]['hog'].tolist()
+			PHOG_features += test_dif_hog[hog_enc_idx]['features'].tolist()
 
 
-		PHOG_enc = dict({'label': test_dif_hogs[0][hog_enc_idx]['label'], 'phog': PHOG_features})
+		PHOG_enc = dict({'label': test_dif_hogs[0][hog_enc_idx]['label'], 'features': np.asarray(PHOG_features)})
 		test_phog.append(PHOG_enc)
 
 
@@ -101,10 +101,10 @@ if __name__ == '__main__':
 		PHOG_features = []
 		for validation_dif_hog in validation_dif_hogs:
 
-			PHOG_features += validation_dif_hog[hog_enc_idx]['hog'].tolist()
+			PHOG_features += validation_dif_hog[hog_enc_idx]['features'].tolist()
 
 
-		PHOG_enc = dict({'label': validation_dif_hogs[0][hog_enc_idx]['label'], 'phog': PHOG_features})
+		PHOG_enc = dict({'label': validation_dif_hogs[0][hog_enc_idx]['label'], 'features': np.asarray(PHOG_features)})
 		validation_phog.append(PHOG_enc)
 
 
