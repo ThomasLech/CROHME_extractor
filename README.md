@@ -25,13 +25,18 @@ With this script, you have more control over data being extracted, namely:
     * Extracting data belonging to certain dataset version.
     * Extracting certain categories of classes, like **digits** or **greek** (see categories.txt for details).
     
-    **Usage**: `python extract.py <out_format> <box_size> <dataset_version=2013> <category=all>`  
-    **Example usage**: `python extract.py pixels 32 2011+2012+2013 digits+operators+lowercase_letters+greek`  
+    **Usage**: `python extract.py <out_format> <box_size> <dataset_version=2013> <category=all>`
+
+    **Example usage**: `python extract.py pixels 32 2011+2012+2013 digits+operators+lowercase_letters+greek`
+
     **Caution**: Other output formats than pixels, **do not** work yet.
 
-2. **_visualize.py_** script will plot single figure containing a random batch of your **extracted** data.  
-    **Usage**: `visualize.py <number_of_samples> <number_of_columns=4>`  
-    **Example usage**: `python visualize.py 40 8`  
+2. **_visualize.py_** script will plot single figure containing a random batch of your **extracted** data.
+
+    **Usage**: `visualize.py <number_of_samples> <number_of_columns=4>`
+
+    **Example usage**: `python visualize.py 40 8`
+
     **Plot**:
     ![crohme_extractor_plot](https://user-images.githubusercontent.com/22115481/30137213-9c619b0a-9362-11e7-839a-624f08e606f7.png)
 
