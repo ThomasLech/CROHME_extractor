@@ -1,10 +1,9 @@
 ## Abstract
-CROHME datasets originally exhibit features needed for _Online-handwritting_ recognition.  
-Apart from traces drawn encoded, inkml files also contain trace drawing time captured.
-So we leave only those features that are needed for our task.
+CROHME datasets originally exhibit features designed for _Online-handwritting_ recognition task.  
+Apart from drawn traces being encoded, inkml files also contain trace drawing time captured.
+So we need to extract new feature map, namely matrices of pixel intensities.
 
-Following scripts will get you started in _Offline math symbols recognition_ task.
-
+The following scripts will get you started with _Offline math symbols recognition_ task.
 
 
 ## Setup
@@ -16,7 +15,6 @@ Python version we use is **3.5.0**.
 ```
 pip install -U -r requirements.txt
 ```
-
 
 
 ## Scripts info
@@ -61,8 +59,7 @@ So this script takes arbitrary number of **hog_cell_size** values(HoG features h
 Example of script execution: `python extract_phog.py 5 10 20` <-- loads HoGs with respectively 5x5, 10x10, 20x20 cell sizes.
 
 
-6. **_histograms_** folder contains histograms representing **distribution of labels** based on different label categories. These diagrams help you better understand underlying dataset.
-
+6. **_histograms_** folder contains histograms representing **distribution of labels** based on different label categories. These diagrams help you better understand extracted data.
 
 
 ## Distribution of labels
