@@ -5,10 +5,10 @@ import pickle
 
 import math
 import random
-
+# Image processing
 from skimage.feature import hog
+# Data visualization
 import matplotlib.pyplot as plt
-
 
 'constants'
 outputs_rel_path = 'outputs'
@@ -42,7 +42,6 @@ if __name__ == '__main__':
             print(e)
             exit()
 
-
     'Load pickled data'
     with open(os.path.join(train_dir, 'train.pickle'), 'rb') as train:
         print('Restoring training set ...')
@@ -55,6 +54,8 @@ if __name__ == '__main__':
     with open(os.path.join(validation_dir, 'validation.pickle'), 'rb') as validation:
         print('Restoring validation set ...')
         validation_set = pickle.load(validation)
+    # Get size of the original box that was flattened
+    box_size = int(math.sqrt(train_set[0]['features'].size))
 
     'Compute number of rows with respect to number of both columns and samples provided by user'
     rows_numb = math.ceil(number_of_samples / cols_numb)
@@ -72,7 +73,7 @@ if __name__ == '__main__':
                 'Generate random sample id'
                 random_id = random.randint(0, len(train_set))
 
-                axis_arr[row, col].imshow(train_set[random_id]['features'], cmap='gray')
+                axis_arr[row, col].imshow(train_set[random_id]['features'].reshape((box_size, box_size)), cmap='gray')
                 axis_arr[row, col].set_title('Class: \"' + train_set[random_id]['label'] + '\"', size=13, y=1.2)
 
             'Remove explicit axises'

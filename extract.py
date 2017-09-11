@@ -49,12 +49,9 @@ class Extractor(object):
         # Load list of possibble categories
         self.categories_available = self.load_categories()
 
-        # Remove '+' delimiters
-        regex_pattern = re.compile("[^\+]+")
-
-
-        # Set versions
-        versions = regex_pattern.findall(versions)
+        # Split by '+' delimeters
+        versions = versions.split('+')
+        categories = categories.split('+')
         for version in versions:
 
             if version not in self.versions_available:
@@ -64,13 +61,8 @@ class Extractor(object):
 
         self.versions = versions
 
-
-        # Set categories
-        categories = regex_pattern.findall(categories)
-
         # Get names of available categories
         category_names = [category["name"] for category in self.categories_available]
-
         classes = []
         for category in categories:
 
@@ -100,7 +92,6 @@ class Extractor(object):
         for version in self.versions:
 
             if version == "2011":
-
                 data_dir = os.path.join(self.crohme_package, "CROHME2011_data")
                 train_dir = os.path.join(data_dir, "CROHME_training")
                 test_dir = os.path.join(data_dir, "CROHME_testGT")
@@ -111,7 +102,6 @@ class Extractor(object):
                 self.validation_data += self.parse_inkmls(validation_dir)
 
             if version == "2012":
-
                 data_dir = os.path.join(self.crohme_package, "CROHME2012_data")
                 train_dir = os.path.join(data_dir, "trainData")
                 test_dir = os.path.join(data_dir, "testDataGT")
@@ -122,7 +112,6 @@ class Extractor(object):
                 self.validation_data += self.parse_inkmls(validation_dir)
 
             if version == "2013":
-
                 data_dir = os.path.join(self.crohme_package, "CROHME2013_data")
                 train_root_dir = os.path.join(data_dir, "TrainINKML")
                 train_dir_1 = os.path.join(train_root_dir, "expressmatch")
@@ -364,6 +353,15 @@ class Extractor(object):
 
     	return pattern_drawn
 
+# Converts label to one-hot format
+def to_one_hot(class_name, classes):
+
+    one_hot = np.zeros(shape=(len(classes)), dtype=np.int8)
+    class_index = classes.index(class_name)
+    one_hot[class_index] = 1
+
+    return one_hot
+
 if __name__ == '__main__':
 
     out_formats = ['pixels', 'hog', 'phog']
@@ -385,29 +383,33 @@ if __name__ == '__main__':
             print("# Possible output formats:\n")
             [print(" ", out_format) for out_format in out_formats]
             exit()
-
-
         if len(sys.argv) == 4:
-
             extractor = Extractor(sys.argv[2], sys.argv[3])
         elif len(sys.argv) == 5:
-
             extractor = Extractor(sys.argv[2], sys.argv[3], sys.argv[4])
-
 
     # Extract pixel features
     if out_format == out_formats[0]:
 
         train_data, test_data, validation_data = extractor.pixels()
+        # Get list of all classes
+        classes = sorted(list(set([data_record['label'] for data_record in train_data+test_data])))
+        print('How many classes:', len(classes))
+        with open('classes.txt', 'w') as desc:
+            for r_class in classes:
+                desc.write(r_class + '\n')
+        # 1. Flatten image to single feaute map (vector of pixel intensities)
+        # 2. Convert its label to one-hot format
+        train_data = [{'label': to_one_hot(train_rec['label'], classes), 'features': train_rec['features'].flatten()} for train_rec in train_data]
+        test_data = [{'label': to_one_hot(test_rec['label'], classes), 'features': test_rec['features'].flatten()} for test_rec in test_data]
+        validation_data = [{'label': to_one_hot(validation_rec['label'], classes), 'features': validation_rec['features'].flatten()} for validation_rec in validation_data]
 
     # Extract HOG features
     elif out_format == out_formats[1]:
-
         train_data, test_data, validation_data = extractor.hog()
 
     # Extract PHOG features
     elif out_format == out_formats[2]:
-
         train_data, test_data, validation_data = extractor.phog()
 
     output_dir = os.path.abspath(extractor.output_dir)
@@ -427,7 +429,6 @@ if __name__ == '__main__':
         os.mkdir(test_out_dir)
     if not os.path.exists(validation_out_dir):
         os.mkdir(validation_out_dir)
-
 
     with open(os.path.join(train_out_dir, 'train.pickle'), 'wb') as train:
         pickle.dump(train_data, train, protocol=pickle.HIGHEST_PROTOCOL)
