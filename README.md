@@ -21,7 +21,7 @@ pip install -U -r requirements.txt
 1. **_extract.py_** script will extract **square-shaped** bitmaps.  
 With this script, you have more control over data being extracted, namely:
     * Extracting data belonging to certain dataset version.
-    * Extracting certain categories of classes, like **digits** or **greek** (see categories.txt for details).
+    * Extracting certain categories of classes, like **digits** or **greek** (see **_categories.txt_** for details).
     
     **Usage**: `python extract.py <out_format> <box_size> <dataset_version=2013> <category=all>`
 
