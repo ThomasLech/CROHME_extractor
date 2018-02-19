@@ -6,14 +6,16 @@ import re
 
 # PArse xml
 import xml.etree.ElementTree as ET
-
 import numpy as np
-
 # Load / dump data
 import pickle
-
 # Draw line between two points
 from skimage.draw import line
+from skimage.morphology import thin
+import matplotlib.pyplot as plt
+
+# One-hot encoder/decoder
+import one_hot
 
 class Extractor(object):
 
@@ -201,10 +203,11 @@ class Extractor(object):
 
             'Center scaled pattern so it fits a box with specified size'
             pattern_drawn = self.draw_pattern(centered_trace_grp, box_size=self.box_size)
-            # plt.imshow(pattern_drawn, cmap='gray')
+            # Make sure that patterns are thinned (1 pixel thick)
+            pat_thinned = 1.0 - thin(1.0 - np.asarray(pattern_drawn))
+            # plt.imshow(pat_thinned, cmap='gray')
             # plt.show()
-
-            pattern_enc = dict({'features': pattern_drawn, 'label': pattern.get('label')})
+            pattern_enc = dict({'features': pat_thinned, 'label': pattern.get('label')})
 
             # Filter classes that belong to categories selected by the user
             if pattern_enc.get('label') in self.classes:
@@ -353,15 +356,6 @@ class Extractor(object):
 
     	return pattern_drawn
 
-# Converts label to one-hot format
-def to_one_hot(class_name, classes):
-
-    one_hot = np.zeros(shape=(len(classes)), dtype=np.int8)
-    class_index = classes.index(class_name)
-    one_hot[class_index] = 1
-
-    return one_hot
-
 if __name__ == '__main__':
 
     out_formats = ['pixels', 'hog', 'phog']
@@ -394,15 +388,17 @@ if __name__ == '__main__':
         train_data, test_data, validation_data = extractor.pixels()
         # Get list of all classes
         classes = sorted(list(set([data_record['label'] for data_record in train_data+test_data])))
-        print('How many classes:', len(classes))
+        print('\nHow many classes:', len(classes))
+        print('How many training samples:', len(train_data))
+        print('How many testing samples:', len(test_data))
         with open('classes.txt', 'w') as desc:
             for r_class in classes:
                 desc.write(r_class + '\n')
         # 1. Flatten image to single feaute map (vector of pixel intensities)
         # 2. Convert its label to one-hot format
-        train_data = [{'label': to_one_hot(train_rec['label'], classes), 'features': train_rec['features'].flatten()} for train_rec in train_data]
-        test_data = [{'label': to_one_hot(test_rec['label'], classes), 'features': test_rec['features'].flatten()} for test_rec in test_data]
-        validation_data = [{'label': to_one_hot(validation_rec['label'], classes), 'features': validation_rec['features'].flatten()} for validation_rec in validation_data]
+        train_data = [{'label': one_hot.encode(train_rec['label'], classes), 'features': train_rec['features'].flatten()} for train_rec in train_data]
+        test_data = [{'label': one_hot.encode(test_rec['label'], classes), 'features': test_rec['features'].flatten()} for test_rec in test_data]
+        validation_data = [{'label': one_hot.encode(validation_rec['label'], classes), 'features': validation_rec['features'].flatten()} for validation_rec in validation_data]
 
     # Extract HOG features
     elif out_format == out_formats[1]:

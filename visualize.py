@@ -9,6 +9,8 @@ import random
 from skimage.feature import hog
 # Data visualization
 import matplotlib.pyplot as plt
+# One-hot encoder/decoder
+import one_hot
 
 'constants'
 outputs_rel_path = 'outputs'
@@ -56,6 +58,8 @@ if __name__ == '__main__':
         validation_set = pickle.load(validation)
     # Get size of the original box that was flattened
     box_size = int(math.sqrt(train_set[0]['features'].size))
+    # Load classes
+    classes = open('classes.txt', 'r').read().split()
 
     'Compute number of rows with respect to number of both columns and samples provided by user'
     rows_numb = math.ceil(number_of_samples / cols_numb)
@@ -72,9 +76,12 @@ if __name__ == '__main__':
 
                 'Generate random sample id'
                 random_id = random.randint(0, len(train_set))
+                training_sample = train_set[random_id]
+                # Decode from one-hot format to string
+                label = one_hot.decode(training_sample['label'], classes)
 
-                axis_arr[row, col].imshow(train_set[random_id]['features'].reshape((box_size, box_size)), cmap='gray')
-                axis_arr[row, col].set_title('Class: \"' + train_set[random_id]['label'] + '\"', size=13, y=1.2)
+                axis_arr[row, col].imshow(training_sample['features'].reshape((box_size, box_size)), cmap='gray')
+                axis_arr[row, col].set_title('Class: \"' + label + '\"', size=13, y=1.2)
 
             'Remove explicit axises'
             axis_arr[row, col].axis('off')
@@ -83,6 +90,7 @@ if __name__ == '__main__':
 
     'Adjust spacing between subplots and window border'
     figure.subplots_adjust(hspace=1.4, wspace=0.2)
+    plt.savefig('visualization.png')
 
     # Brings foreground
     plt.show()

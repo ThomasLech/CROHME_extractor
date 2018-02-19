@@ -22,7 +22,7 @@ pip install -U -r requirements.txt
 With this script, you have more control over data being extracted, namely:
     * Extracting data belonging to certain dataset version.
     * Extracting certain categories of classes, like **digits** or **greek** (see categories.txt for details).
-    
+
     **Usage**: `python extract.py <out_format> <box_size> <dataset_version=2013> <category=all>`
 
     **Example usage**: `python extract.py pixels 32 2011+2012+2013 digits+operators+lowercase_letters+greek`
@@ -38,19 +38,12 @@ With this script, you have more control over data being extracted, namely:
     **Plot**:
     ![crohme_extractor_plot](https://user-images.githubusercontent.com/22115481/30137213-9c619b0a-9362-11e7-839a-624f08e606f7.png)
 
-3. **_parse.py_** script will extract **square-shaped** bitmaps.  
-You can specify bitmap size with `bitmap_size` command line flag(argument).  
-Patterns drawn are then **centered** inside **square-shaped** bitmaps.  
-Example of script execution: `python parse.py 50`  <-- extracts 50x50 bitmaps.  
-This script combines samples extracted from all training sets and all test sets respectively and dumps into 2 separate files.  
-
-
 4. **_extract_hog.py_** script will extract **HoG features**.  
 This script accepts 1 command line argument, namely **hog_cell_size**.  
 **hog_cell_size** corresponds to **pixels_per_cell** parameter of **skimage.feature.hog** function.  
 We use **skimage.feature.hog** to extract HoG features.  
 Example of script execution: `python extract_hog.py 5`  <-- pixels_per_cell=(5, 5)  
-This script loads data previously dumped by **_parse.py_** and again dumps its outputs(train, test) separately.
+This script loads data previously dumped by **_extract.py_** and again dumps its outputs(train, test) separately.
 
 
 5. **_extract_phog.py_** script will extract **PHoG features**.  
