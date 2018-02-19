@@ -29,7 +29,7 @@ With this script, you have more control over data being extracted, namely:
 
     **Caution**: Other output formats than pixels, **do not** work yet.
 
-2. **_augmentation.py_** script lets you generate more data using data standard augmentation techniques.
+2. **_augmentation.py_** script lets you generate more data using standard data augmentation techniques.
 
    **Usage**: `augmentation.py -c <category to augment> -a <skew angle>`
    
