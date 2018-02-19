@@ -61,6 +61,6 @@ Example of script execution: `python extract_phog.py 5 10 20` <-- loads HoGs wit
 5. **_histograms_** folder contains histograms representing **distribution of labels** based on different label categories. These diagrams help you better understand extracted data.
 
 
-## Distribution of labels
+## Distribution of classes
 ![all_labels_distribution](https://cloud.githubusercontent.com/assets/22115481/26694312/413fb646-4707-11e7-943c-b8ecebd0c986.png)
 Labels were combined from **_train_** and **_test_** sets.
