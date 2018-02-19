@@ -29,7 +29,13 @@ With this script, you have more control over data being extracted, namely:
 
     **Caution**: Other output formats than pixels, **do not** work yet.
 
-2. **_visualize.py_** script will plot single figure containing a random batch of your **extracted** data.
+2. **_augmentation.py_** script lets you generate more data using data standard augmentation techniques.
+
+   **Usage**: `augmentation.py -c <category to augment> -a <skew angle>`
+   
+   **Example usage**: `python augmentation.py -c lowercase_letters -a 6`
+
+3. **_visualize.py_** script will plot single figure containing a random batch of your **extracted** data.
 
     **Usage**: `visualize.py <number_of_samples> <number_of_columns=4>`
 
