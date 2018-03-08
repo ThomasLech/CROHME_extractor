@@ -18,16 +18,19 @@ pip install -U -r requirements.txt
 
 
 ## Scripts info
-1. **_extract.py_** script will extract **square-shaped** bitmaps.  
-With this script, you have more control over data being extracted, namely:
-    * Extracting data belonging to certain dataset version.
-    * Extracting certain categories of classes, like **digits** or **greek** (see categories.txt for details).
+1. **_extract.py_**
+   - Extracts trace groups from inkml files.
+   - Converts extracted trace groups into images. Images are **square shaped** bitmaps with only black (value 0) and white (value 1) pixels. Black color denotes patterns (ROI).
+   - Labels those images (according to inkml files).
+   - Flattens images to one-dimensional vectors.
+   - Converts labels to one-hot format.
+   - Dumps training and testing sets separately into **_outputs_** folder.
 
-    **Usage**: `python extract.py <out_format> <box_size> <dataset_version=2013> <category=all>`
+    **Command line arguments**: -b [BOX_SIZE] -d [DATASET_VERSION] -c [CATEGORY] -t [THICKNESS]
 
-    **Example usage**: `python extract.py pixels 32 2011+2012+2013 digits+operators+lowercase_letters+greek`
+    **Example usage**: `python extract.py -b 36 -d 2011 2012 2013 -c digits lowercase_letters -t 5`
 
-    **Caution**: Other output formats than pixels, **do not** work yet.
+    **Caution**: Script doesn't work properly for images bigger than 200x200 (For yet unknown reason).
 
 2. **_augmentation.py_** script lets you generate more data using standard data augmentation techniques.
 
