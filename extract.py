@@ -65,8 +65,6 @@ testing_inkmls = [inkml_file for inkml_file in all_inkml_files if 'CROHME_testGT
 print('Numder of training INKML files:', len(training_inkmls))
 print('Numder of testing INKML files:', len(testing_inkmls))
 
-train_data = []
-test_data = []
 classes = []
 def extract_trace_grps(inkml_file_abs_path):
     trace_grps = []
@@ -123,6 +121,7 @@ def extract_trace_grps(inkml_file_abs_path):
         # print('Pattern: {};'.format(pattern))
     return trace_grps
 
+
 def get_tracegrp_properties(trace_group):
     x_mins, y_mins, x_maxs, y_maxs = [], [], [], []
     for trace in trace_group['traces']:
@@ -134,7 +133,7 @@ def get_tracegrp_properties(trace_group):
         y_mins.append(y_min)
         y_maxs.append(y_max)
     # print('X_min: {}; Y_min: {}; X_max: {}; Y_max: {}'.format(min(x_mins), min(y_mins), max(x_maxs), max(y_maxs)))
-    return min(x_mins), min(y_mins), max(x_maxs) - min(x_mins) + 1, max(y_maxs) - min(y_mins) + 1
+    return min(x_mins), min(y_mins), max(x_maxs) - min(x_mins), max(y_maxs) - min(y_mins)
 
 def shift_trace_group(trace_grp, x_min, y_min):
     shifted_traces = []
@@ -143,13 +142,7 @@ def shift_trace_group(trace_grp, x_min, y_min):
     return {'label': trace_grp['label'], 'traces': shifted_traces}
 
 def get_scale(width, height, box_size):
-    box_size = box_size - 1
     ratio = width / height
-    if width == 0:
-        width += 1
-    if height == 0:
-        height += 1
-
     if ratio < 1.0:
         return box_size / height
     else:
@@ -187,28 +180,34 @@ def convert_to_img(trace_group):
     # 1. Shift trace_group
     trace_group = shift_trace_group(trace_group, x_min=x, y_min=y)
     x, y, width, height = get_tracegrp_properties(trace_group)
-    if width == 0 or height == 0:
-        raise Exception('Some sides are 0 length.')
-
     # 2. Rescale trace_group
     trace_group = rescale_trace_group(trace_group, width, height, box_size=box_size-thickness_pad*2)
-    _, _, rescaled_w, rescaled_h = get_tracegrp_properties(trace_group)
-
-    if rescaled_w == 0 or rescaled_h == 0:
-        raise Exception('Some sides are 0 length.')
-    # if rescaled_w < box_size and rescaled_h < box_size:
-    #     raise Exception('Both sides are < box_size - 1')
-    if rescaled_w > box_size or rescaled_h > box_size:
-        raise Exception('Some sides are > box_size')
-
+    x, y, width_r, height_r = get_tracegrp_properties(trace_group)
     # Shift trace_group by thickness padding
     trace_group = shift_trace_group(trace_group, x_min=-thickness_pad, y_min=-thickness_pad)
-
     # Center inside square box (box_size X box_size)
-    margin_x = (box_size - rescaled_w + thickness) // 2
-    margin_y = (box_size - rescaled_h + thickness) // 2
+    margin_x = (box_size - (width_r + thickness_pad*2)) // 2
+    margin_y = (box_size - (height_r + thickness_pad*2)) // 2
     trace_group = shift_trace_group(trace_group, x_min=-margin_x, y_min=-margin_y)
     image = draw_trace(trace_group, box_size, thickness=thickness)
+    # Get pattern's width & height
+    pat_width, pat_height = width_r + thickness_pad*2, height_r + thickness_pad*2
+
+    # ! TESTS
+    # cv2.imshow('image', image)
+    # cv2.waitKey(0)
+    # print((pat_width, pat_height))
+    if width < box_size and height < box_size:
+        raise Exception('Trace group is too small.')
+    if x != 0 or y != 0:
+        raise Exception('Trace group was inproperly shifted.')
+    if pat_width == 0 or pat_height == 0:
+        raise Exception('Some sides are 0 length.')
+    if pat_width < box_size and pat_height < box_size:
+        raise Exception('Both sides are < box_size.')
+    if pat_width > box_size or pat_height > box_size:
+        raise Exception('Some sides are > box_size')
+
     return image
 
 damaged = 0
@@ -227,14 +226,11 @@ for training_inkml in training_inkmls:
                 classes.append(label)
             # Convert patterns to images
             image = convert_to_img(trace_grp)
-            # print(image)
-            # cv2.imshow('image', image)
-            # cv2.waitKey(0)
             # Flatten image & construct pattern object
             pattern = {'features': image.flatten(), 'label': label}
             train.append(pattern)
         except Exception as e:
-            # print(e)
+            print(e)
             # Ignore damaged trace groups
             damaged += 1
 
@@ -257,7 +253,7 @@ for testing_inkml in testing_inkmls:
             pattern = {'features': image.flatten(), 'label': label}
             test.append(pattern)
         except Exception as e:
-            # print(e)
+            print(e)
             # Ignore damaged trace groups
             damaged += 1
 
@@ -265,7 +261,7 @@ for testing_inkml in testing_inkmls:
 classes = sorted(classes)
 print('Training set size:', len(train))
 print('Testing set size:', len(test))
-print('How many damamged trace groups:', damaged)
+print('How many rejected trace groups:', damaged)
 
 # Data POST-processing
 # 1. Normalize features
