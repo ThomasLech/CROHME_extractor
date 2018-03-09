@@ -206,8 +206,7 @@ def convert_to_img(trace_group):
     if pat_width < box_size and pat_height < box_size:
         raise Exception('Both sides are < box_size.')
     if pat_width > box_size or pat_height > box_size:
-        raise Exception('Some sides are > box_size')
-
+        raise Exception('Some sides are > box_size.')
     return image
 
 damaged = 0
@@ -259,18 +258,18 @@ for testing_inkml in testing_inkmls:
 
 # Sort classes alphabetically
 classes = sorted(classes)
-print('Training set size:', len(train))
+print('\nTraining set size:', len(train))
 print('Testing set size:', len(test))
-print('How many rejected trace groups:', damaged)
+print('How many rejected trace groups:', damaged, '\n')
 
 # Data POST-processing
 # 1. Normalize features
 # 2. Convert labels to one-hot format
 for pat in train:
-    pat['features'] = pat['features'] / 255
+    pat['features'] = (pat['features'] / 255).astype(dtype=np.uint8)
     pat['label'] = one_hot.encode(pat['label'], classes)
 for pat in test:
-    pat['features'] = pat['features'] / 255
+    pat['features'] = (pat['features'] / 255).astype(dtype=np.uint8)
     pat['label'] = one_hot.encode(pat['label'], classes)
 
 # Dump extracted data
@@ -297,4 +296,4 @@ with open('classes.txt', 'w') as f:
         f.write(r_class + '\n')
     print('All classes that were extracted are listed in {} file.'.format(f.name))
 
-print('\n\n# Like our facebook page @ https://www.facebook.com/mathocr/')
+print('\n# Like our facebook page @ https://www.facebook.com/mathocr/')
