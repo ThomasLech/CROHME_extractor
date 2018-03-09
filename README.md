@@ -28,7 +28,7 @@ pip install -U -r requirements.txt
 
     **Command line arguments**: -b [BOX_SIZE] -d [DATASET_VERSION] -c [CATEGORY] -t [THICKNESS]
 
-    **Example usage**: `python extract.py -b 36 -d 2011 2012 2013 -c digits lowercase_letters -t 5`
+    **Example usage**: `python extract.py -b 50 -d 2011 2012 2013 -c digits lowercase_letters operators -t 5`
 
     **Caution**: Script doesn't work properly for images bigger than 200x200 (For yet unknown reason).
 
