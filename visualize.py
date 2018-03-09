@@ -53,11 +53,9 @@ if __name__ == '__main__':
         print('Restoring test set ...')
         test_set = pickle.load(test)
 
-    with open(os.path.join(validation_dir, 'validation.pickle'), 'rb') as validation:
-        print('Restoring validation set ...')
-        validation_set = pickle.load(validation)
     # Get size of the original box that was flattened
-    box_size = int(math.sqrt(train_set[0]['features'].size))
+    # box_size = int(math.sqrt(train_set[0]['features'].size))
+    box_size = 50
     # Load classes
     classes = open('classes.txt', 'r').read().split()
 
@@ -75,8 +73,8 @@ if __name__ == '__main__':
             if sample_id < number_of_samples:
 
                 'Generate random sample id'
-                random_id = random.randint(0, len(train_set))
-                training_sample = train_set[random_id]
+                random_id = random.randint(0, len(test_set))
+                training_sample = test_set[random_id]
                 # Decode from one-hot format to string
                 label = one_hot.decode(training_sample['label'], classes)
 
