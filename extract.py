@@ -114,9 +114,6 @@ def extract_trace_grps(inkml_file_abs_path):
 
                 # Cast x & y coords to integer
                 x, y = round(x), round(y)
-                # if x < 0 or y < 0:
-                    # raise Exception('Negative coords!')
-
                 coords.append([x, y])
             trace_grp['traces'].append(coords)
         trace_grps.append(trace_grp)
