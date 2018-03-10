@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 
 import pickle
 
@@ -16,79 +17,59 @@ import one_hot
 outputs_rel_path = 'outputs'
 train_dir = os.path.join(outputs_rel_path, 'train')
 test_dir = os.path.join(outputs_rel_path, 'test')
-validation_dir = os.path.join(outputs_rel_path, 'validation')
 
-if __name__ == '__main__':
+ap = argparse.ArgumentParser()
+ap.add_argument('-b', '--box_size', required=True, help="Specify a length of square box side.")
+ap.add_argument('-n', '--n_samples', required=True, help="Specify the nubmer of samples to show.")
+ap.add_argument('-c', '--columns', required=True, help="Specify the nubmer of columns.")
+args = vars(ap.parse_args())
 
-    'parse cmd input'
-    print(' # Script flags:', '<number_of_samples>', '<number_of_columns=4>', '\n')
+# Load pickled data
+with open(os.path.join(train_dir, 'train.pickle'), 'rb') as train:
+    print('Restoring training set ...')
+    train_set = pickle.load(train)
 
-    'parse number_of_samples argument'
-    if len(sys.argv) < 2:
-        print('\n ! Usage:', sys.argv[0], '<number_of_samples>', '<number_of_columns=4>', '\n')
-        exit()
+with open(os.path.join(test_dir, 'test.pickle'), 'rb') as test:
+    print('Restoring test set ...')
+    test_set = pickle.load(test)
 
-    try:
-        number_of_samples = int(sys.argv[1])
-    except Exception as e:
-        print(e)
-        exit()
+# Extract command-line arguments
+box_size = int(args.get('box_size'))
+n_samples = int(args.get('n_samples'))
+n_cols = int(args.get('columns'))
 
-    'parse cols_numb argument'
-    cols_numb = 4
-    if len(sys.argv) == 3:
+# Load classes
+classes = open('classes.txt', 'r').read().split()
 
-        try:
-            cols_numb = int(sys.argv[2])
-        except Exception as e:
-            print(e)
-            exit()
+'Compute number of rows with respect to number of both columns and samples provided by user'
+rows_numb = math.ceil(n_samples / n_cols)
 
-    'Load pickled data'
-    with open(os.path.join(train_dir, 'train.pickle'), 'rb') as train:
-        print('Restoring training set ...')
-        train_set = pickle.load(train)
+'Instanciate a figure to plot samples on'
+figure, axis_arr = plt.subplots(rows_numb, n_cols, figsize=(12, 4))
+figure.patch.set_facecolor((0.91, 0.91, 0.91))
 
-    with open(os.path.join(test_dir, 'test.pickle'), 'rb') as test:
-        print('Restoring test set ...')
-        test_set = pickle.load(test)
+sample_id = 0
+for row in range(rows_numb):
+    for col in range(n_cols):
 
-    # Get size of the original box that was flattened
-    # box_size = int(math.sqrt(train_set[0]['features'].size))
-    box_size = 50
-    # Load classes
-    classes = open('classes.txt', 'r').read().split()
+        if sample_id < n_samples:
+            'Generate random sample id'
+            random_id = random.randint(0, len(test_set))
+            training_sample = test_set[random_id]
+            # Decode from one-hot format to string
+            label = one_hot.decode(training_sample['label'], classes)
 
-    'Compute number of rows with respect to number of both columns and samples provided by user'
-    rows_numb = math.ceil(number_of_samples / cols_numb)
+            axis_arr[row, col].imshow(training_sample['features'].reshape((box_size, box_size)), cmap='gray')
+            axis_arr[row, col].set_title('Class: \"' + label + '\"', size=13, y=1.2)
 
-    'Instanciate a figure to plot samples on'
-    figure, axis_arr = plt.subplots(rows_numb, cols_numb, figsize=(12, 4))
-    figure.patch.set_facecolor((0.91, 0.91, 0.91))
+        'Remove explicit axises'
+        axis_arr[row, col].axis('off')
 
-    sample_id = 0
-    for row in range(rows_numb):
-        for col in range(cols_numb):
+        sample_id += 1
 
-            if sample_id < number_of_samples:
+'Adjust spacing between subplots and window border'
+figure.subplots_adjust(hspace=1.4, wspace=0.2)
+plt.savefig('visualization.png')
 
-                'Generate random sample id'
-                random_id = random.randint(0, len(test_set))
-                training_sample = test_set[random_id]
-                # Decode from one-hot format to string
-                label = one_hot.decode(training_sample['label'], classes)
-
-                axis_arr[row, col].imshow(training_sample['features'].reshape((box_size, box_size)), cmap='gray')
-                axis_arr[row, col].set_title('Class: \"' + label + '\"', size=13, y=1.2)
-
-            'Remove explicit axises'
-            axis_arr[row, col].axis('off')
-
-            sample_id += 1
-
-    'Adjust spacing between subplots and window border'
-    figure.subplots_adjust(hspace=1.4, wspace=0.2)
-    plt.savefig('visualization.png')
-
-    # Brings foreground
-    plt.show()
+# Brings foreground
+plt.show()

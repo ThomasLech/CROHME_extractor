@@ -1,3 +1,6 @@
+# Use like:
+# python extract.py -b 28 -d 2011 2012 2013 -c digits symbols -t 20
+
 import os
 import argparse
 # PArse xml
@@ -15,8 +18,6 @@ version_choices = ['2011', '2012', '2013']
 # Load categories from `categories.txt` file
 categories = [{'name': cat.split(':')[0], 'classes': cat.split(':')[1].split()} for cat in list(open('categories.txt', 'r'))]
 category_names = [cat['name'] for cat in categories]
-# Use like:
-# python extract.py -b 28 -d 2011 2012 2013 -c digits symbols -t 20
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-b', '--box_size', required=True, help="Specify a length of square box side.")
@@ -196,7 +197,6 @@ def convert_to_img(trace_group):
     # ! TESTS
     # cv2.imshow('image', image)
     # cv2.waitKey(0)
-    # print((pat_width, pat_height))
     if width < box_size and height < box_size:
         raise Exception('Trace group is too small.')
     if x != 0 or y != 0:
