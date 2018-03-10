@@ -2,6 +2,7 @@
 This script makes class_infos more balanced.
 '''
 import os
+import argparse
 import pickle
 import one_hot
 from random import shuffle
@@ -12,10 +13,15 @@ from keras.preprocessing.image import ImageDataGenerator
 outputs_dir = 'outputs'
 train_out_dir = os.path.join(outputs_dir, 'train')
 test_out_dir = os.path.join(outputs_dir, 'test')
-box_size = 50
+
+ap = argparse.ArgumentParser()
+ap.add_argument('-b', '--box_size', required=True, help="Specify a length of square box side.")
+args = vars(ap.parse_args())
+
+box_size = int(args.get('box_size'))
 # Balance ratio
-b_ratio = 0.5
-batch_size = 50
+b_ratio = 1.0
+batch_size = 32
 
 # Load data
 with open(os.path.join(train_out_dir, 'train.pickle'), 'rb') as data:
@@ -27,7 +33,7 @@ print('Training set size:', len(train))
 print('Testing set size:', len(test))
 
 # Initialize keras image generator
-datagen = ImageDataGenerator(rotation_range=5, shear_range=0.2)
+datagen = ImageDataGenerator(rotation_range=10, shear_range=0.2)
 
 # Load all class_infos that were extracted
 classes = [label.strip() for label in list(open('classes.txt', 'r'))]
