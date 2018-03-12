@@ -26,25 +26,25 @@ pip install -U -r requirements.txt
    - Converts labels to one-hot format.
    - Dumps training and testing sets separately into **_outputs_** folder.
 
-    **Command line arguments**: -b [BOX_SIZE] -d [DATASET_VERSION] -c [CATEGORY] -t [THICKNESS]
+   **Command line arguments**: -b [BOX_SIZE] -d [DATASET_VERSION] -c [CATEGORY] -t [THICKNESS]
 
-    **Example usage**: `python extract.py -b 50 -d 2011 2012 2013 -c digits lowercase_letters operators -t 5`
+   **Example usage**: `python extract.py -b 50 -d 2011 2012 2013 -c digits lowercase_letters operators -t 5`
 
-    **Caution**: Script doesn't work properly for images bigger than 200x200 (For yet unknown reason).
+   **Caution**: Script doesn't work properly for images bigger than 200x200 (For yet unknown reason).
 
-2. **_augmentation.py_** script lets you generate more data using standard data augmentation techniques.
+2. **_balance.py_** script balances the overall distribution of classes.
 
-   **Usage**: `augmentation.py -c <category to augment> -a <skew angle>`
+   **Command line arguments**: -b [BOX_SIZE] -ub [UPPER_BOUND][Optional]
    
-   **Example usage**: `python augmentation.py -c lowercase_letters -a 6`
+   **Example usage**: `python balance.py -b 50 -ub 6000`
 
-3. **_visualize.py_** script will plot single figure containing a random batch of your **extracted** data.
+3. **_visualize.py_** script will plot single figure depicting a random batch of **extracted** data.
 
-    **Usage**: `visualize.py <number_of_samples> <number_of_columns=4>`
+   **Command line arguments**: -b [BOX_SIZE] -n [N_SAMPLES] -c [COLUMNS]
 
-    **Example usage**: `python visualize.py 40 8`
+    **Example usage**: `python visualize.py -b 50 -n 40 -c 8`
 
-    **Plot**:
+    **Sample Plot**:
     ![crohme_extractor_plot](https://user-images.githubusercontent.com/22115481/30137213-9c619b0a-9362-11e7-839a-624f08e606f7.png)
 
 3. **_extract_hog.py_** script will extract **HoG features**.  
